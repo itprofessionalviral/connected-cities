@@ -24,3 +24,28 @@ http://localhost:8080/connected?origin=city1&destination=city2
 * http://localhost:8080/connected?origin=Philadelphia&destination=Albany
     * should return no
 
+## Development and Build
+#### Build project
+```
+./mvnw clean package
+```
+#### Run application
+```
+java -jar connected-cities-0.0.1-SNAPSHOT.jar --city.routes.resource.path=file:/tmp/test-cities.txt
+```
+* Use below property to use a custom file for input
+`city.routes.resource.path=file:/tmp/test-cities.txt`
+
+#### Check code coverage
+1. Build command
+    ```
+    ./mvnw clean test jacoco:report
+    ```
+1. Access report, by opening html in browser.
+    ```
+    target/site/jacoco/index.html
+    ```
+
+# Reference
+* Code Style
+    * https://raw.githubusercontent.com/google/styleguide/gh-pages/intellij-java-google-style.xml
