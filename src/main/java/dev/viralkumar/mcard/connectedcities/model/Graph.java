@@ -5,15 +5,19 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
+import java.util.StringJoiner;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Collectors;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Undirected Graph implementation
  *
  * @param <T> type of element in Graph
  */
+@Slf4j
 public class Graph<T> {
 
   private final ConcurrentMap<T, Set<T>> adjVertices = new ConcurrentHashMap<>();
@@ -50,18 +54,31 @@ public class Graph<T> {
     visited.add(from);
     queue.add(from);
 
+    log.trace("isConnected. from: {} to: {}", from, to);
     while (!queue.isEmpty()) {
       T vertex = queue.poll();
+      log.trace("peek: {}", vertex);
       for (T v : getAdjVertices(vertex)) {
         if (v.equals(to)) {
           return true;
         }
         if (!visited.contains(v)) {
+          log.trace("  traversal: {}", v);
           visited.add(v);
           queue.add(v);
         }
       }
     }
     return false;
+  }
+
+  @Override
+  public String toString() {
+    final StringJoiner stringJoiner = new StringJoiner(", ", "{", "}");
+    adjVertices.forEach((key, values) -> stringJoiner
+        .add(String.format("\"%s\" : [%s]", key, values.stream()
+            .map(v -> "\"" + v + "\"")
+            .collect(Collectors.joining(",")))));
+    return stringJoiner.toString();
   }
 }

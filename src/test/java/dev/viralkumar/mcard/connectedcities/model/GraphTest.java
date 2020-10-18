@@ -3,10 +3,13 @@ package dev.viralkumar.mcard.connectedcities.model;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.json.JSONException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 
 class GraphTest {
 
@@ -49,4 +52,15 @@ class GraphTest {
     assertThrows(NullPointerException.class, () -> graph.isConnected(null, "Boston"),
         "Input must not be null");
   }
+
+  @Test
+  void testToString() throws JSONException {
+    Graph<String> graph = new Graph<>();
+    graph.addEdge("Boston", "New York");
+    graph.addEdge("Boston", "Chicago");
+    JSONAssert.assertEquals(
+        "{\"New York\" : [\"Boston\"], \"Chicago\" : [\"Boston\"], \"Boston\" : [\"New York\",\"Chicago\"]}",
+        graph.toString(), JSONCompareMode.LENIENT);
+  }
+
 }
